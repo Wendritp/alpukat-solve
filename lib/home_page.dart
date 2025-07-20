@@ -74,45 +74,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _saveClassification() async {
-    if (_image == null || _classificationResult.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tidak ada gambar atau hasil klasifikasi untuk disimpan.')),
-      );
-      return;
-    }
+    if (_image == null || _classificationResult.isEmpty) return;
 
-    setState(() {
-      _isClassifying = true; // Indicate saving process
-    });
+    setState(() { _isClassifying = true; });
 
     try {
-      // Upload image to Firebase Storage
-      final storageRef = FirebaseStorage.instance.ref().child('leaf_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-      await storageRef.putFile(_image!);
-      _imageUrl = await storageRef.getDownloadURL();
+      // 1) Upload ke Storage (jika perlu), kemudian ambil imageBytes
+      final Uint8List imageBytes = await _image!.readAsBytes();
 
-      // Save classification data to Firestore
-      await FirebaseFirestore.instance.collection('history').add({
-        'image_url': _imageUrl,
+      // 2) Bungkus jadi Blob
+      final Blob firestoreBlob = Blob(imageBytes);
+
+      // 3) Simpan ke Firestore
+      await FirebaseFirestore.instance
+          .collection('history')
+          .add({
+        'image_blob': firestoreBlob,
         'name': _classificationResult,
         'description': _getDescription(_classificationResult),
         'probability': _probability,
-        'timestamp': Timestamp.now(),
+        'status': 'success',
+        'timestamp': FieldValue.serverTimestamp(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hasil klasifikasi berhasil disimpan!')),
+        const SnackBar(content: Text('Tersimpan di Riwayat!')),
       );
       _resetState();
-    } catch (e) {
-      print("Error saving classification: $e");
+
+    } catch (e, st) {
+      debugPrint('🔥 Firestore error: $e\n$st');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal menyimpan hasil: $e')),
       );
     } finally {
-      setState(() {
-        _isClassifying = false;
-      });
+      setState(() { _isClassifying = false; });
     }
   }
 
@@ -208,17 +204,17 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10),
                           child: _image != null
                               ? Image.file(
-                                  _image!,
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                )
+                            _image!,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
                               : Image.asset(
-                                  'assets/icon/app_icon.png', // Fallback placeholder
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
+                            'assets/icon/app_icon.png', // Fallback placeholder
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Text(

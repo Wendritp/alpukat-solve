@@ -12,17 +12,28 @@ import 'firebase_options.dart'; // Diaktifkan kembali
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Inisialisasi Firebase diaktifkan kembali
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+  // 1) Inisialisasi Firebase, tapi abaikan duplicate-app
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      print('>>> storageBucket: ${Firebase.app().options.storageBucket}');
+    }
+  } on FirebaseException catch (e) {
+    if (e.code != 'duplicate-app') {
+      rethrow;
+    }
+  }
+
+  // 2) Jalankan aplikasi, dengan Provider di atas MyApp
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+      create: (_) => ThemeProvider(),
       child: const MyApp(),
     ),
   );
 }
+
 
 // Router configuration
 final GoRouter _router = GoRouter(

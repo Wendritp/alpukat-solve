@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "49039912640",
-    "project_id": "alpukat998876",
-    "storage_bucket": "alpukat998876.firebasestorage.app"
+    "project_number": "216042968759",
+    "project_id": "alpukat-app-286db",
+    "storage_bucket": "alpukat-app-286db.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:49039912640:android:b82efaa3c8bbe736d00725",
+        "mobilesdk_app_id": "1:216042968759:android:3ec3c537709d1aa5a91f32",
         "android_client_info": {
           "package_name": "com.example.myapp"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCkuMPn5U4hXUQvoJPDHRS9yGVvXnGx8lU"
+          "current_key": "AIzaSyBED3ldNWbVYkZ8lrGXuWhVnH-7z95NFIM"
         }
       ],
       "services": {
