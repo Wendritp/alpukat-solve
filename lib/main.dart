@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,13 +35,16 @@ void main() async {
   );
 }
 
-
-// Router configuration
-final GoRouter _router = GoRouter(
-  initialLocation: '/',
-  routes: <RouteBase>[
-    // ShellRoute untuk BottomNavigationBar yang persisten
-    ShellRoute(
+    final GoRouter _router = GoRouter(
+      initialLocation: '/splash',
+      routes: <RouteBase>[
+    // Splash Screen Route
+    GoRoute(
+    path: '/splash',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SplashScreen();
+      },
+    ),ShellRoute(
       builder: (context, state, child) {
         return ScaffoldWithNavBar(child: child);
       },

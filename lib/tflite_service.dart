@@ -11,7 +11,7 @@ class TfliteService {
   Future<void> loadModel() async {
     try {
       // Load the model and labels
-      _interpreter = await Interpreter.fromAsset('assets/model.tflite');
+_interpreter = await Interpreter.fromAsset('assets/model_comp.tflite');
       final labelsData = await rootBundle.loadString('assets/labels.txt');
       _labels = labelsData.split('\n');
       _isModelLoaded = true;

@@ -159,37 +159,42 @@ class HistoryPage extends StatelessWidget {
       ) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(name),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (imageBytes != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.memory(
-                    imageBytes,
-                    height: 180,
-                    fit: BoxFit.cover,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(name),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (imageBytes != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.memory(
+                      imageBytes,
+                      height: 180,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-              const SizedBox(height: 16),
-              Text('Jenis: $name', style: textTheme.titleMedium),
-              const SizedBox(height: 8),
-              Text('Deskripsi: $description', style: textTheme.bodyMedium),
-              const SizedBox(height: 8),
-              Text('Waktu: $dateStr', style: textTheme.bodySmall),
-            ],
+                const SizedBox(height: 16),
+                Text('Jenis: $name', style: textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Text('Deskripsi: $description', style: textTheme.bodyMedium),
+                const SizedBox(height: 8),
+                Text('Waktu: $dateStr', style: textTheme.bodySmall),
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Tutup'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // POP menggunakan dialogContext, bukan context luar
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Tutup'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
